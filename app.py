@@ -44,20 +44,18 @@ st.markdown("""
             transition: background-color 0.3s;
         }
         .navbar a:hover {
-            background-color: #2780b9;
+            background-color: #2980b9;
         }
         .active {
-            background-color: #280b9;
+            background-color: #2980b9;
         }
         .sidebar {
             font-size: 18px;
             padding: 10px;
-            background-color: indigo;
+            background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
-        
         .stButton button {
             background: linear-gradient(90deg, #4CAF50, #45a049);
             color: white;
@@ -71,14 +69,14 @@ st.markdown("""
             transform: scale(1.05);
         }
         .result-box {
-            background-color: black;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
         .card {
-            background-color: black;
+            background-color: #ffffff;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -98,27 +96,42 @@ st.markdown("""
 # Load the dataset
 @st.cache_data
 def load_data():
-    data = pd.read_csv(r".\Employee.csv")
-    return data
+    try:
+        data = pd.read_csv("Employee.csv")  # Relative path for compatibility
+        print("Columns in dataset:", data.columns)  # Debugging statement
+        return data
+    except FileNotFoundError:
+        st.error("Dataset file 'Employee.csv' not found. Please ensure the file is uploaded.")
+        st.stop()
 
 # Preprocess the data
 def preprocess_data(data):
+    # Standardize column names to lowercase for consistency
+    data.columns = data.columns.str.lower()
+
+    # Check for required columns
+    required_columns = ['gender', 'everbenched', 'education', 'city', 'age', 'joiningyear', 'experienceincurrentdomain']
+    missing_columns = [col for col in required_columns if col not in data.columns]
+    if missing_columns:
+        st.error(f"Missing columns in dataset: {', '.join(missing_columns)}. Please check the dataset.")
+        st.stop()
+
     # Impute missing values
-    data.fillna({'EverBenched': 'No', 'ExperienceInCurrentDomain': 0}, inplace=True)
-    
+    data.fillna({'everbenched': 'No', 'experienceincurrentdomain': 0}, inplace=True)
+
     # Label encode binary variables
     label_encoder = LabelEncoder()
-    data['Gender'] = label_encoder.fit_transform(data['Gender'])  # Male=1, Female=0
-    data['EverBenched'] = label_encoder.fit_transform(data['EverBenched'])  # Yes=1, No=0
-    
+    data['gender'] = label_encoder.fit_transform(data['gender'])  # Male=1, Female=0
+    data['everbenched'] = label_encoder.fit_transform(data['everbenched'])  # Yes=1, No=0
+
     # One-hot encode multi-class variables
-    data = pd.get_dummies(data, columns=['Education', 'City'], drop_first=True)
-    
+    data = pd.get_dummies(data, columns=['education', 'city'], drop_first=True)
+
     # Scale numerical features
     scaler = StandardScaler()
-    numerical_features = ['Age', 'JoiningYear', 'ExperienceInCurrentDomain']
+    numerical_features = ['age', 'joiningyear', 'experienceincurrentdomain']
     data[numerical_features] = scaler.fit_transform(data[numerical_features])
-    
+
     return data
 
 # Load the trained model
@@ -126,7 +139,7 @@ def preprocess_data(data):
 def load_model():
     model_path = "salary_prediction_model.pkl"
     if not os.path.exists(model_path):  # Check if the model file exists
-        st.error(f"Model file '{model_path}' not found. Please ensure the file exists or retrain the model.")
+        st.error(f"Model file '{model_path}' not found. Please ensure the file is uploaded.")
         st.stop()
     return joblib.load(model_path)
 
@@ -170,8 +183,8 @@ def main():
     # Load dataset and model
     data = load_data()
     data = preprocess_data(data)
-    X = data.drop(columns=['PaymentTier'])
-    y = data['PaymentTier']
+    X = data.drop(columns=['paymenttier'])
+    y = data['paymenttier']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = load_model()
 
@@ -200,7 +213,7 @@ def main():
         # Expandable sections
         with st.expander("Target Variable Distribution"):
             fig, ax = plt.subplots()
-            data['PaymentTier'].value_counts().plot(kind='pie', autopct='%1.1f%%', ax=ax)
+            data['paymenttier'].value_counts().plot(kind='pie', autopct='%1.1f%%', ax=ax)
             ax.set_title("Distribution of Payment Tiers")
             st.pyplot(fig)
 
@@ -244,23 +257,23 @@ def main():
 
         # Convert inputs to DataFrame
         user_input = pd.DataFrame({
-            'Gender': [1 if gender == "Male" else 0],
-            'Age': [age],
-            'JoiningYear': [joining_year],
-            'EverBenched': [1 if ever_benched == "Yes" else 0],
-            'ExperienceInCurrentDomain': [experience_in_current_domain],
-            'Education': [education],  # Add Education column
-            'City': [city]             # Add City column
+            'gender': [1 if gender == "Male" else 0],
+            'age': [age],
+            'joiningyear': [joining_year],
+            'everbenched': [1 if ever_benched == "Yes" else 0],
+            'experienceincurrentdomain': [experience_in_current_domain],
+            'education': [education],  # Add Education column
+            'city': [city]             # Add City column
         })
 
         # One-hot encode Education and City
-        user_input = pd.get_dummies(user_input, columns=['Education', 'City'], drop_first=True)
+        user_input = pd.get_dummies(user_input, columns=['education', 'city'], drop_first=True)
 
         # Align user input with training data
         user_input = user_input.reindex(columns=X.columns, fill_value=0)
 
         # Scale numerical features
-        numerical_features = ['Age', 'JoiningYear', 'ExperienceInCurrentDomain']
+        numerical_features = ['age', 'joiningyear', 'experienceincurrentdomain']
         scaler = StandardScaler()
         user_input[numerical_features] = scaler.fit_transform(user_input[numerical_features])
 
