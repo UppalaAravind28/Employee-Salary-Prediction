@@ -250,14 +250,50 @@ body {
     transform: scale(1.02);
 }
 
-/* Footer */
+ /* Footer Styling */
 .footer {
+    background-color: #f4f6f9;
+    color: #2c3e50;
     text-align: center;
-    margin-top: 40px;
-    padding: 15px;
-    font-size: 14px;
-    color: #7f8c8d;
-    background-color: transparent;
+    padding: 30px 15px;
+    font-size: 15px;
+    border-top: 1px solid #dcdde1;
+    margin-top: 60px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.footer p {
+    margin: 0;
+    line-height: 1.7;
+    font-weight: 400;
+    color: #34495e;
+}
+
+.footer a {
+    color: #2980b9;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.25s ease-in-out, text-decoration 0.25s ease-in-out;
+}
+
+.footer a:hover {
+    color: #1abc9c;
+    text-decoration: underline;
+}
+
+.footer strong {
+    color: #2c3e50;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
     </style>
@@ -495,7 +531,18 @@ def main():
             st.markdown('<div class="result-box">The predicted Payment Tier is: <strong>{}</strong></div>'.format(prediction[0]), unsafe_allow_html=True)
 
     # Footer
-    st.markdown('<div class="footer">Developed by Uppala Aravind | © 2025</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <footer class="footer">
+        <div class="footer-content">
+            <p>
+                Developed by <strong>Uppala Aravind</strong> | 
+                <a href="https://github.com/UppalaAravind28" target="_blank" style="color: #2980b9; text-decoration: none;">GitHub</a> | 
+                <a href="https://www.linkedin.com/in/uppala-aravind-28-lin/" target="_blank" style="color: #2980b9; text-decoration: none;">LinkedIn</a>
+            </p>
+            <p>&copy; 2025 All Rights Reserved.</p>
+        </div>
+    </footer>
+""", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
