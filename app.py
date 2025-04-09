@@ -12,126 +12,150 @@ import os
 # Custom CSS for professional styling
 st.markdown("""
     <style>
-        /* General Page Styling */
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Arial', sans-serif;
-        }
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 0;
-        }
-        .navbar {
-            display: flex;
-            background-color: #34495e;
-            padding: 10px;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .navbar a {
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-size: 18px;
-            border-radius: 5px;
-            margin: 0 10px;
-            transition: background-color 0.3s;
-        }
-        .navbar a:hover {
-            background-color: #2980b9;
-        }
-        .active {
-            background-color: #2980b9;
-        }
-        .sidebar {
-            font-size: 18px;
-            padding: 10px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .stButton button {
-            background: linear-gradient(90deg, #4CAF50, #45a049);
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-            width: 100%;
-            padding: 10px;
-            transition: transform 0.2s;
-        }
-        .stButton button:hover {
-            transform: scale(1.05);
-        }
-        .result-box {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-        .card {
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 10px 0;
-            text-align: center;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 10px;
-            font-size: 14px;
-            color: #7f8c8d;
-        }
+  /* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-bottom: 4px solid #2980b9;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #34495e;
+    padding: 12px 0;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.navbar a {
+    color: #ffffff;
+    padding: 10px 18px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    background-color: #2980b9;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #ffffff;
+    color: #2c3e50; /* Ensuring dark text on light background */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    font-size: 17px;
+}
+
+/* Button */
+.stButton button {
+    background: linear-gradient(135deg, #4CAF50, #43A047);
+    color: #ffffff; /* Light text on dark button */
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.stButton button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.2);
+}
+
+/* Result Box */
+.result-box {
+    background-color: #ffffff;
+    color: #2c3e50; /* Ensure dark readable text */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+}
+
+/* Cards */
+.card {
+    background-color: #ffffff;
+    color: #2c3e50; /* Ensure text is visible */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin: 15px 0;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 15px;
+    font-size: 14px;
+    color: #7f8c8d;
+    background-color: transparent;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
 # Load the dataset
 @st.cache_data
 def load_data():
-    try:
-        data = pd.read_csv("Employee.csv")  # Relative path for compatibility
-        print("Columns in dataset:", data.columns)  # Debugging statement
-        return data
-    except FileNotFoundError:
-        st.error("Dataset file 'Employee.csv' not found. Please ensure the file is uploaded.")
-        st.stop()
+    data = pd.read_csv(r".\Employee.csv")
+    return data
 
 # Preprocess the data
 def preprocess_data(data):
-    # Standardize column names to lowercase for consistency
-    data.columns = data.columns.str.lower()
-
-    # Check for required columns
-    required_columns = ['gender', 'everbenched', 'education', 'city', 'age', 'joiningyear', 'experienceincurrentdomain']
-    missing_columns = [col for col in required_columns if col not in data.columns]
-    if missing_columns:
-        st.error(f"Missing columns in dataset: {', '.join(missing_columns)}. Please check the dataset.")
-        st.stop()
-
     # Impute missing values
-    data.fillna({'everbenched': 'No', 'experienceincurrentdomain': 0}, inplace=True)
-
+    data.fillna({'EverBenched': 'No', 'ExperienceInCurrentDomain': 0}, inplace=True)
+    
     # Label encode binary variables
     label_encoder = LabelEncoder()
-    data['gender'] = label_encoder.fit_transform(data['gender'])  # Male=1, Female=0
-    data['everbenched'] = label_encoder.fit_transform(data['everbenched'])  # Yes=1, No=0
-
+    data['Gender'] = label_encoder.fit_transform(data['Gender'])  # Male=1, Female=0
+    data['EverBenched'] = label_encoder.fit_transform(data['EverBenched'])  # Yes=1, No=0
+    
     # One-hot encode multi-class variables
-    data = pd.get_dummies(data, columns=['education', 'city'], drop_first=True)
-
+    data = pd.get_dummies(data, columns=['Education', 'City'], drop_first=True)
+    
     # Scale numerical features
     scaler = StandardScaler()
-    numerical_features = ['age', 'joiningyear', 'experienceincurrentdomain']
+    numerical_features = ['Age', 'JoiningYear', 'ExperienceInCurrentDomain']
     data[numerical_features] = scaler.fit_transform(data[numerical_features])
-
+    
     return data
 
 # Load the trained model
@@ -139,7 +163,7 @@ def preprocess_data(data):
 def load_model():
     model_path = "salary_prediction_model.pkl"
     if not os.path.exists(model_path):  # Check if the model file exists
-        st.error(f"Model file '{model_path}' not found. Please ensure the file is uploaded.")
+        st.error(f"Model file '{model_path}' not found. Please ensure the file exists or retrain the model.")
         st.stop()
     return joblib.load(model_path)
 
@@ -183,8 +207,8 @@ def main():
     # Load dataset and model
     data = load_data()
     data = preprocess_data(data)
-    X = data.drop(columns=['paymenttier'])
-    y = data['paymenttier']
+    X = data.drop(columns=['PaymentTier'])
+    y = data['PaymentTier']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = load_model()
 
@@ -213,7 +237,7 @@ def main():
         # Expandable sections
         with st.expander("Target Variable Distribution"):
             fig, ax = plt.subplots()
-            data['paymenttier'].value_counts().plot(kind='pie', autopct='%1.1f%%', ax=ax)
+            data['PaymentTier'].value_counts().plot(kind='pie', autopct='%1.1f%%', ax=ax)
             ax.set_title("Distribution of Payment Tiers")
             st.pyplot(fig)
 
@@ -257,23 +281,23 @@ def main():
 
         # Convert inputs to DataFrame
         user_input = pd.DataFrame({
-            'gender': [1 if gender == "Male" else 0],
-            'age': [age],
-            'joiningyear': [joining_year],
-            'everbenched': [1 if ever_benched == "Yes" else 0],
-            'experienceincurrentdomain': [experience_in_current_domain],
-            'education': [education],  # Add Education column
-            'city': [city]             # Add City column
+            'Gender': [1 if gender == "Male" else 0],
+            'Age': [age],
+            'JoiningYear': [joining_year],
+            'EverBenched': [1 if ever_benched == "Yes" else 0],
+            'ExperienceInCurrentDomain': [experience_in_current_domain],
+            'Education': [education],  # Add Education column
+            'City': [city]             # Add City column
         })
 
         # One-hot encode Education and City
-        user_input = pd.get_dummies(user_input, columns=['education', 'city'], drop_first=True)
+        user_input = pd.get_dummies(user_input, columns=['Education', 'City'], drop_first=True)
 
         # Align user input with training data
         user_input = user_input.reindex(columns=X.columns, fill_value=0)
 
         # Scale numerical features
-        numerical_features = ['age', 'joiningyear', 'experienceincurrentdomain']
+        numerical_features = ['Age', 'JoiningYear', 'ExperienceInCurrentDomain']
         scaler = StandardScaler()
         user_input[numerical_features] = scaler.fit_transform(user_input[numerical_features])
 
@@ -284,7 +308,7 @@ def main():
             st.markdown('<div class="result-box">The predicted Payment Tier is: <strong>{}</strong></div>'.format(prediction[0]), unsafe_allow_html=True)
 
     # Footer
-    st.markdown('<div class="footer">Developed by Uppala Aravind | © 2025</div>', unsafe_allow_html=True)
+    st.markdown('<div class="footer">Developed by Your Name | © 2023</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
