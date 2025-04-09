@@ -135,7 +135,7 @@ body {
 # Load the dataset
 @st.cache_data
 def load_data():
-    data = pd.read_csv(r".\Employee.csv")
+    data = pd.read_csv(r"Employee.csv")
     return data
 
 # Preprocess the data
