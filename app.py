@@ -12,6 +12,137 @@ import os
 # Custom CSS for professional styling
 st.markdown("""
     <style>
+    /* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+/* Header */
+.header {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-bottom: 4px solid #2980b9;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #34495e;
+    padding: 12px 0;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.navbar a {
+    color: #ffffff;
+    padding: 10px 18px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    background-color: #2980b9;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    font-size: 17px;
+}
+
+/* Button */
+.stButton button {
+    background: linear-gradient(135deg, #4CAF50, #43A047);
+    color: #ffffff;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.stButton button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.2);
+}
+
+/* Result Box */
+.result-box {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+}
+
+/* Cards */
+.card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin: 15px 0;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 15px;
+    font-size: 14px;
+    color: #7f8c8d;
+    background-color: transparent;
+}
+
+    </style>
+""", unsafe_allow_html=True)
+
+import streamlit as st
+import pandas as pd
+import joblib
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import os
+
+# Custom CSS for professional styling
+st.markdown("""
+    <style>
   /* Reset & Base Styles */
 * {
     margin: 0;
@@ -211,14 +342,70 @@ def main():
     y = data['PaymentTier']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = load_model()
-
+    
     # Home Page
     if current_page == "Home":
-        st.header("Welcome to the Employee Salary Prediction App!")
+        st.markdown('<h1 class="">Welcome to the Employee Salary Prediction App</h1>', unsafe_allow_html=True)
+
         st.write("""
-            This app uses machine learning to predict the Payment Tier of employees based on their details.
-            Navigate through the sidebar or the navigation bar to explore the dataset, view model insights, and make predictions.
+            ### Overview
+            The **Employee Salary Prediction App** is a powerful machine learning-based tool designed to predict the **Payment Tier** of employees based on their demographic and professional details. 
+            Whether you're an HR professional, a data analyst, or simply curious about employee compensation trends, this app provides valuable insights into how various factors influence payment tiers.
+
+            ### Why Use This App?
+            - **Data-Driven Insights**: Leverage machine learning to make accurate predictions about employee payment tiers.
+            - **User-Friendly Interface**: Navigate seamlessly through different sections of the app to explore the dataset, view model insights, and make predictions.
+            - **Customizable Inputs**: Enter specific employee details to get tailored predictions for individual cases.
+            - **Actionable Decisions**: Use the predictions to inform hiring, compensation benchmarking, and strategic workforce planning.
+
+            ### How It Works
+            1. **Dataset**: The app uses a rich dataset containing information about employees, including:
+            - **Demographics**: Gender, Age, City
+            - **Professional Background**: Education level, joining year, experience in the current domain
+            - **Work History**: Whether the employee has ever been benched (Yes/No)
+            - **Target Variable**: Payment Tier (1, 2, or 3)
+
+            2. **Machine Learning Model**: A **Random Forest Classifier** is trained on the dataset to predict the Payment Tier. The model considers various features such as age, education, city, and experience to make accurate predictions.
+
+            3. **Prediction**: Users can input employee details on the "Make a Prediction" page, and the app will generate a predicted Payment Tier in real-time.
+
+            ### Key Features
+            - **Interactive Navigation**: Explore different sections of the app using the sidebar or navigation bar.
+            - **Dataset Overview**: View the dataset, key metrics, and visualizations.
+            - **Model Insights**: Understand the importance of each feature and analyze the model's performance using a confusion matrix.
+            - **Make a Prediction**: Input employee details to predict their Payment Tier.
+            - **Professional Styling**: A clean and modern UI ensures a seamless user experience.
+            - **Error Handling**: Graceful handling of missing files, invalid inputs, and unexpected errors.
+
+            ### Who Can Benefit?
+            - **HR Professionals**: Gain insights into employee compensation trends and make informed decisions about salary structures.
+            - **Data Scientists**: Explore the dataset, model insights, and prediction capabilities to understand how machine learning can be applied to HR data.
+            - **Managers**: Use the app to benchmark employee salaries and ensure fairness and equity in compensation.
+
+            ### Getting Started
+            To get started:
+            1. Navigate to the **"Make a Prediction"** page using the sidebar or navigation bar.
+            2. Enter the employee's details, such as gender, age, education level, city, and experience.
+            3. Click the **"Predict"** button to see the predicted Payment Tier.
+
+            ### Dataset and Model
+            - The dataset used in this app contains anonymized employee records with features such as age, gender, education level, city, and work history.
+            - The **Random Forest Classifier** model was trained on this dataset to predict the Payment Tier. Key preprocessing steps include:
+            - Handling missing values
+            - Encoding categorical variables (e.g., gender, education, city)
+            - Scaling numerical features (e.g., age, joining year, experience)
+
+            ### Future Enhancements
+            We are continuously working to improve the app. Planned enhancements include:
+            - Adding support for additional machine learning models (e.g., Gradient Boosting, Neural Networks).
+            - Incorporating advanced visualizations for deeper insights.
+            - Allowing users to upload their own datasets for predictions.
+
+            Thank you for visiting the Employee Salary Prediction App! We hope you find it useful and insightful. For any questions or feedback, feel free to reach out to us.
         """)
+
+
+    
 
     # Dataset Overview Page
     elif current_page == "Dataset Overview":
@@ -308,7 +495,7 @@ def main():
             st.markdown('<div class="result-box">The predicted Payment Tier is: <strong>{}</strong></div>'.format(prediction[0]), unsafe_allow_html=True)
 
     # Footer
-    st.markdown('<div class="footer">Developed by Your Name | © 2023</div>', unsafe_allow_html=True)
+    st.markdown('<div class="footer">Developed by Uppala Aravind | © 2025</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
